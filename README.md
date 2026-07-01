@@ -64,14 +64,27 @@ even when the fine-grained class boundary is wrong.
 
 ## Evaluation
 
-<!-- TODO: paste your classification_report output here -->
+Evaluated on the held-out test set (1,600 images, 400 per class):
+
 | Class | Precision | Recall | F1 |
 |---|---|---|---|
-| glioma | _fill in_ | _fill in_ | _fill in_ |
-| meningioma | _fill in_ | _fill in_ | _fill in_ |
-| notumor | _fill in_ | _fill in_ | _fill in_ |
-| pituitary | _fill in_ | _fill in_ | _fill in_ |
-| **Overall accuracy** | | | _fill in_ |
+| glioma | 0.9940 | 0.8300 | 0.9046 |
+| meningioma | 0.8834 | 0.9850 | 0.9314 |
+| notumor | 0.9615 | 1.0000 | 0.9804 |
+| pituitary | 0.9876 | 0.9975 | 0.9925 |
+| **Accuracy** | | | **0.9531** |
+| Macro avg | 0.9566 | 0.9531 | 0.9523 |
+| Weighted avg | 0.9566 | 0.9531 | 0.9523 |
+
+**Reading the errors, not just the average:** glioma has the highest precision (0.9940 — when the
+model says glioma, it's almost always right) but the lowest recall (0.8300 — it misses ~17% of
+actual gliomas, likely confusing them for meningioma). Meningioma shows the inverse pattern: lower
+precision (0.8834), high recall (0.9850) — it over-catches, absorbing some true gliomas. This
+glioma/meningioma confusion is exactly what shows up in the XAI comparison grid's misclassified
+example (a true meningioma predicted as glioma), where Grad-CAM and Integrated Gradients both
+focus tightly on the correct lesion despite the wrong final label. The two tumor types are visually
+similar enough that the model's *attention* is right even when its *classification* isn't — a much
+more precise diagnosis of the failure mode than "95% accuracy" alone would give you.
 
 Full confusion matrix: `saved_model/confusion_matrix.png`
 
